@@ -14,8 +14,7 @@ import SwiftUI
 /// and display the appropiate field.
 public struct SignInView<Header: View,
                          Footer: View,
-                         PrimaryButtonStyle: ButtonStyle,
-                         LinkButtonStyle: ButtonStyle>: View, KeyboardIterableFields {
+                         PrimaryButtonStyle: ButtonStyle>: View, KeyboardIterableFields {
     @Environment(\.authenticatorState) private var authenticatorState
     @Environment(\.authenticatorOptions) private var options
     @StateObject private var usernameValidator: Validator

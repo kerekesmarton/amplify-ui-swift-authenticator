@@ -101,7 +101,7 @@ public struct Authenticator<LoadingContent: View,
             ProgressView()
         },
         @ViewBuilder signInContent: (SignInState) -> SignInContent = { state in
-            SignInView<SignInHeader, SignInFooter, AuthenticatorButtonStyle, AuthenticatorButtonStyle>(state: state)
+            SignInView<SignInHeader, SignInFooter, AuthenticatorButtonStyle>(state: state)
         },
         @ViewBuilder confirmSignInWithMFACodeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithMFACodeContent = { state in
             ConfirmSignInWithMFACodeView(state: state)
