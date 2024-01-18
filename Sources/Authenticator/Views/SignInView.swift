@@ -13,12 +13,15 @@ import SwiftUI
 /// This view will automatically determine what type of login mechanism (i.e. username, email, phone number) is configured
 /// and display the appropiate field.
 public struct SignInView<Header: View,
-                         Footer: View>: View, KeyboardIterableFields {
+                         Footer: View,
+                         PrimaryButtonStyle: ButtonStyle,
+                         LinkButtonStyle: ButtonStyle>: View, KeyboardIterableFields {
     @Environment(\.authenticatorState) private var authenticatorState
     @Environment(\.authenticatorOptions) private var options
     @StateObject private var usernameValidator: Validator
     @StateObject private var passwordValidator: Validator
     @ObservedObject private var state: SignInState
+    private var buttonStyle: PrimaryButtonStyle?
     private let headerContent: Header
     private let footerContent: Footer
     private var viewModifiers = ViewModifiers()
@@ -31,6 +34,7 @@ public struct SignInView<Header: View,
     /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  ``SignInFooter``
     public init(
         state: SignInState,
+        @ViewBuilder buttonStyle: () -> PrimaryButtonStyle? = { nil },
         @ViewBuilder headerContent: () -> Header = {
             SignInHeader()
         },
@@ -42,6 +46,7 @@ public struct SignInView<Header: View,
         self.focusedField.wrappedValue = nil
         self.headerContent = headerContent()
         self.footerContent = footerContent()
+        self.buttonStyle = buttonStyle()
         self._usernameValidator = StateObject(wrappedValue: Validator(
             using: { value in
                 switch state.configuration.usernameAttribute {
@@ -88,12 +93,21 @@ public struct SignInView<Header: View,
             .textInputAutocapitalization(.never)
         #endif
 
-            Button("authenticator.signIn.button.signIn".localized()) {
-                Task {
-                    await signIn()
+            if let buttonStyle {
+                SwiftUI.Button("authenticator.signIn.button.signIn".localized()) {
+                    Task {
+                        await signIn()
+                    }
                 }
+                .buttonStyle(buttonStyle)
+            } else {
+                Button("authenticator.signIn.button.signIn".localized()) {
+                    Task {
+                        await signIn()
+                    }
+                }
+                .buttonStyle(.primary)
             }
-            .buttonStyle(.primary)
 
             footerContent
                 .environment(\.authenticatorOptions.hidesSignUpButton, shouldHideSignUpButton)

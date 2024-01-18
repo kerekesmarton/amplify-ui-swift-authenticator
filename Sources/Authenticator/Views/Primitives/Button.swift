@@ -185,7 +185,7 @@ extension Button {
     }
 }
 
-private struct AuthenticatorButtonStyle: ButtonStyle {
+public struct AuthenticatorButtonStyle: ButtonStyle {
     let font: Font
     let foregroundColor: Color
     let backgroundColor: Color
@@ -196,7 +196,7 @@ private struct AuthenticatorButtonStyle: ButtonStyle {
     let borderColor: Color
     let useOverlay: Bool
 
-    func makeBody(configuration: Self.Configuration) -> some View {
+    public func makeBody(configuration: Self.Configuration) -> some View {
         if useOverlay {
             content(for: configuration)
                 .overlay(
