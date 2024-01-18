@@ -33,13 +33,13 @@ public struct SignInView<Header: View,
     /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  ``SignInFooter``
     public init(
         state: SignInState,
-        @ViewBuilder buttonStyle: () -> PrimaryButtonStyle? = { nil },
         @ViewBuilder headerContent: () -> Header = {
             SignInHeader()
         },
         @ViewBuilder footerContent: () -> Footer = {
             SignInFooter()
-        }
+        },
+        @ViewBuilder buttonStyle: () -> PrimaryButtonStyle? = { nil }
     ) {
         self.state = state
         self.focusedField.wrappedValue = nil
