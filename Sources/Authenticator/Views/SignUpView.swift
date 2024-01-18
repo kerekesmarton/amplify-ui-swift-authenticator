@@ -10,13 +10,16 @@ import SwiftUI
 
 /// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/signUp`` step.
 public struct SignUpView<Header: View,
-                         Footer: View>: View, KeyboardIterableFields {
+                         Footer: View,
+                         PrimaryButtonStyle: ButtonStyle
+>: View, KeyboardIterableFields {
     @Environment(\.authenticatorState) private var authenticatorState
     @Environment(\.authenticatorOptions) private var options
     @StateObject private var validators: Validators
     @ObservedObject private var state: SignUpState
     private let headerContent: Header
     private let footerContent: Footer
+    private let primaryButtonStyle: PrimaryButtonStyle?
     private let overridenSignUpFields: [SignUpField]?
 
     var focusedField: FocusState<SignUpAttribute?> = FocusState()
@@ -34,12 +37,14 @@ public struct SignUpView<Header: View,
         },
         @ViewBuilder footerContent: () -> Footer = {
             SignUpFooter()
-        }
+        },
+        @ViewBuilder primaryButtonStyle: () -> PrimaryButtonStyle? = { nil }
     ) {
         self.state = state
         self.focusedField.wrappedValue = nil
         self.headerContent = headerContent()
         self.footerContent = footerContent()
+        self.primaryButtonStyle = primaryButtonStyle()
         self.overridenSignUpFields = signUpFields
         let validators = Validators(state: state)
         self._validators = StateObject(wrappedValue: validators)
@@ -59,13 +64,21 @@ public struct SignUpView<Header: View,
                 .textInputAutocapitalization(.never)
             #endif
             }
-                       
-            Button("authenticator.signUp.button.createAccount".localized()) {
-                Task {
-                    await signUp()
+            if let primaryButtonStyle {
+                SwiftUI.Button("authenticator.signUp.button.createAccount".localized()) {
+                    Task {
+                        await signUp()
+                    }
                 }
+                .buttonStyle(primaryButtonStyle)
+            } else {
+                Button("authenticator.signUp.button.createAccount".localized()) {
+                    Task {
+                        await signUp()
+                    }
+                }
+                .buttonStyle(.primary)
             }
-            .buttonStyle(.primary)
             
             footerContent
         }

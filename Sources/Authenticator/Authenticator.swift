@@ -122,7 +122,7 @@ public struct Authenticator<LoadingContent: View,
             ConfirmSignInWithNewPasswordView(state: state)
         },
         @ViewBuilder signUpContent: (SignUpState) -> SignUpContent = { state in
-            SignUpView(state: state)
+            SignUpView<SignUpHeader, SignUpFooter, AuthenticatorButtonStyle>(state: state)
         },
         @ViewBuilder confirmSignUpContent: (ConfirmSignUpState) -> ConfirmSignUpContent = { state in
             ConfirmSignUpView(state: state)
